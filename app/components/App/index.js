@@ -7,9 +7,10 @@
  */
 
 import React from 'react';
+import MainPage from 'containers/MainPage';
 
 function App() {
-  return <div>App</div>;
+  return <MainPage />;
 }
 
 export default App;
