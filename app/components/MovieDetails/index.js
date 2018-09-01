@@ -22,7 +22,9 @@ class MovieDetails extends React.Component {
     const { id } = this.props.match.params;
     const { prev, current } = this.props.ids;
 
-    this.props.memorizeCurrentSelectedId(id);
+    if (id !== current) {
+      this.props.memorizeCurrentSelectedId(id);
+    }
 
     if (prev !== current) {
       this.props.getMovie(id);
@@ -59,7 +61,7 @@ MovieDetails.propTypes = {
   getSimilar: PropTypes.func,
   memorizePrevSelectedId: PropTypes.func,
   memorizeCurrentSelectedId: PropTypes.func,
-  id: PropTypes.shape({
+  ids: PropTypes.shape({
     prev: PropTypes.string,
     current: PropTypes.string,
   }),
