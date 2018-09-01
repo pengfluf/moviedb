@@ -10,14 +10,15 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import { withRouter } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 
 import Header from 'components/Header';
-import MoviePreview from 'components/MoviePreview';
+import MovieList from 'components/MovieList';
+import MovieDetails from 'components/MovieDetails';
 
 import injectSaga from 'utils/injectSaga';
-import injectReducer from 'utils/injectReducer';
 import makeSelectMainPage from './selectors';
-import reducer from './reducer';
 import saga from './saga';
 
 import {
@@ -28,26 +29,55 @@ import {
   updateQuery,
   addToFavorites,
   removeFromFavorites,
+  memorizePrevSelectedId,
+  memorizeCurrentSelectedId,
 } from './actions';
+
+import Wrapper from './styled/Wrapper';
 
 export class MainPage extends React.Component {
   componentDidMount() {
+    if (this.props.match.path === '/movie/:id') {
+      this.props.history.push('/');
+    }
     this.props.getPopular();
   }
 
   render() {
+    const { movies, selectedMovie } = this.props.mainpage;
     return (
-      <div>
+      <Wrapper>
         <Helmet>
           <title>Movie Database – Main Page</title>
           <meta name="description" content="Movie Database" />
         </Helmet>
         <Header />
-        <div>Main Page</div>
-        {this.props.mainpage.movies.map(movie => (
-          <MoviePreview key={movie.id} movie={movie} />
-        ))}
-      </div>
+        <Switch>
+          <Route
+            path="/movie/:id"
+            render={props => (
+              <MovieDetails
+                getMovie={this.props.getMovie}
+                getSimilar={this.props.getSimilar}
+                memorizePrevSelectedId={
+                  this.props.memorizePrevSelectedId
+                }
+                memorizeCurrentSelectedId={
+                  this.props.memorizeCurrentSelectedId
+                }
+                ids={selectedMovie.ids}
+                movie={selectedMovie.movie}
+                similar={selectedMovie.similar}
+                {...props}
+              />
+            )}
+          />
+          <Route
+            path="/"
+            render={props => <MovieList movies={movies} {...props} />}
+          />
+        </Switch>
+      </Wrapper>
     );
   }
 }
@@ -55,6 +85,10 @@ export class MainPage extends React.Component {
 MainPage.propTypes = {
   mainpage: PropTypes.shape({
     movies: PropTypes.array,
+    selectedMovie: PropTypes.shape({
+      movie: PropTypes.object,
+      similar: PropTypes.array,
+    }),
     query: PropTypes.string,
     favorites: PropTypes.array,
     fetching: PropTypes.bool,
@@ -67,6 +101,14 @@ MainPage.propTypes = {
   updateQuery: PropTypes.func,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
+  memorizePrevSelectedId: PropTypes.func,
+  memorizeCurrentSelectedId: PropTypes.func,
+  match: PropTypes.shape({
+    path: PropTypes.string,
+  }),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -83,6 +125,10 @@ function mapDispatchToProps(dispatch) {
     addToFavorites: movie => dispatch(addToFavorites(movie)),
     removeFromFavorites: index =>
       dispatch(removeFromFavorites(index)),
+    memorizePrevSelectedId: id =>
+      dispatch(memorizePrevSelectedId(id)),
+    memorizeCurrentSelectedId: id =>
+      dispatch(memorizeCurrentSelectedId(id)),
   };
 }
 
@@ -91,11 +137,11 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'mainPage', reducer });
 const withSaga = injectSaga({ key: 'mainPage', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MainPage);
+export default withRouter(
+  compose(
+    withSaga,
+    withConnect,
+  )(MainPage),
+);

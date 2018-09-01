@@ -6,6 +6,8 @@ import { combineReducers } from 'redux-immutable';
 import { fromJS } from 'immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
+import mainPageReducer from 'containers/MainPage/reducer';
+
 /*
  * routeReducer
  *
@@ -40,6 +42,7 @@ export function routeReducer(state = routeInitialState, action) {
 export default function createReducer(injectedReducers) {
   return combineReducers({
     route: routeReducer,
+    mainPage: mainPageReducer,
     ...injectedReducers,
   });
 }

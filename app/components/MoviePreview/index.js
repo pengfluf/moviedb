@@ -12,9 +12,9 @@ import Title from './styled/Title';
 import Overview from './styled/Overview';
 
 function MoviePreview(props) {
-  const { original_title: title, overview } = props.movie;
+  const { original_title: title, overview, id } = props.movie;
   return (
-    <Wrapper>
+    <Wrapper to={`/movie/${id}`}>
       <Title>{title}</Title>
       <Overview>{overview}</Overview>
     </Wrapper>

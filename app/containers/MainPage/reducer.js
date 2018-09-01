@@ -15,11 +15,17 @@ import {
   UPDATE_QUERY,
   ADD_TO_FAVORITES,
   REMOVE_FROM_FAVORITES,
+  MEMORIZE_PREV_SELECTED_ID,
+  MEMORIZE_CURRENT_SELECTED_ID,
 } from './constants';
 
 export const initialState = fromJS({
   movies: [],
   selectedMovie: {
+    ids: {
+      prev: null,
+      current: null,
+    },
     movie: {},
     similar: [],
   },
@@ -55,6 +61,13 @@ function mainPageReducer(state = initialState, action) {
       );
     case REMOVE_FROM_FAVORITES:
       return state.delete('favorites', action.index);
+    case MEMORIZE_PREV_SELECTED_ID:
+      return state.setIn(['selectedMovie', 'ids', 'prev'], action.id);
+    case MEMORIZE_CURRENT_SELECTED_ID:
+      return state.setIn(
+        ['selectedMovie', 'ids', 'current'],
+        action.id,
+      );
     default:
       return state;
   }

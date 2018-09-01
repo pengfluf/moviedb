@@ -18,6 +18,8 @@ import {
   UPDATE_QUERY,
   ADD_TO_FAVORITES,
   REMOVE_FROM_FAVORITES,
+  MEMORIZE_PREV_SELECTED_ID,
+  MEMORIZE_CURRENT_SELECTED_ID,
 } from './constants';
 
 export function startFetching() {
@@ -105,5 +107,19 @@ export function removeFromFavorites(index) {
   return {
     type: REMOVE_FROM_FAVORITES,
     index,
+  };
+}
+
+export function memorizePrevSelectedId(id) {
+  return {
+    type: MEMORIZE_PREV_SELECTED_ID,
+    id,
+  };
+}
+
+export function memorizeCurrentSelectedId(id) {
+  return {
+    type: MEMORIZE_CURRENT_SELECTED_ID,
+    id,
   };
 }
