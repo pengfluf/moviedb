@@ -15,6 +15,7 @@ export const GET_POPULAR = 'MainPage/GET_POPULAR';
 export const GET_MOVIE = 'MainPage/GET_MOVIE';
 export const GET_SIMILAR = 'MainPage/GET_SIMILAR';
 export const GET_SEARCHED = 'MainPage/GET_SEARCHED';
+export const GET_GENRE = 'MainPage/GET_GENRE';
 
 export const UPDATE_SELECTED_MOVIE = 'MainPage/UPDATE_SELECTED_MOVIE';
 export const UPDATE_SIMILAR_MOVIES = 'MainPage/UPDATE_SIMILAR_MOVIES';

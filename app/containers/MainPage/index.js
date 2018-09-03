@@ -26,6 +26,7 @@ import {
   getMovie,
   getSimilar,
   getSearched,
+  getGenre,
   updateQuery,
   addToFavorites,
   removeFromFavorites,
@@ -37,28 +38,42 @@ import Wrapper from './styled/Wrapper';
 
 export class MainPage extends React.Component {
   componentDidMount() {
-    if (this.props.match.path === '/movie/:id') {
-      this.props.history.push('/');
-    }
     this.props.getPopular();
   }
 
   render() {
     const { movies, selectedMovie } = this.props.mainpage;
+
     return (
       <Wrapper>
         <Helmet>
           <title>Movie Database – Main Page</title>
           <meta name="description" content="Movie Database" />
         </Helmet>
-        <Header />
+        <Header
+          query={this.props.mainpage.query}
+          updateQuery={this.props.updateQuery}
+          getSearched={this.props.getSearched}
+          getPopular={this.props.getPopular}
+        />
         <Switch>
+          <Route
+            path="/genre/:genreName"
+            render={props => (
+              <MovieList
+                getGenre={this.props.getGenre}
+                movies={movies}
+                {...props}
+              />
+            )}
+          />
           <Route
             path="/movie/:id"
             render={props => (
               <MovieDetails
                 getMovie={this.props.getMovie}
                 getSimilar={this.props.getSimilar}
+                getGenre={this.props.getGenre}
                 memorizePrevSelectedId={
                   this.props.memorizePrevSelectedId
                 }
@@ -73,8 +88,15 @@ export class MainPage extends React.Component {
             )}
           />
           <Route
+            exact
             path="/"
-            render={props => <MovieList movies={movies} {...props} />}
+            render={props => (
+              <MovieList
+                getGenre={this.props.getGenre}
+                movies={movies}
+                {...props}
+              />
+            )}
           />
         </Switch>
       </Wrapper>
@@ -98,6 +120,7 @@ MainPage.propTypes = {
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
   getSearched: PropTypes.func,
+  getGenre: PropTypes.func,
   updateQuery: PropTypes.func,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
@@ -121,6 +144,7 @@ function mapDispatchToProps(dispatch) {
     getMovie: id => dispatch(getMovie(id)),
     getSimilar: id => dispatch(getSimilar(id)),
     getSearched: query => dispatch(getSearched(query)),
+    getGenre: genreId => dispatch(getGenre(genreId)),
     updateQuery: query => dispatch(updateQuery(query)),
     addToFavorites: movie => dispatch(addToFavorites(movie)),
     removeFromFavorites: index =>

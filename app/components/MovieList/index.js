@@ -5,8 +5,7 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import MoviePreview from 'components/MoviePreview';
 
@@ -16,12 +15,19 @@ function MovieList(props) {
   return (
     <Wrapper>
       {props.movies.map(movie => (
-        <MoviePreview key={movie.id} movie={movie} />
+        <MoviePreview
+          key={movie.id}
+          movie={movie}
+          getGenre={props.getGenre}
+        />
       ))}
     </Wrapper>
   );
 }
 
-MovieList.propTypes = {};
+MovieList.propTypes = {
+  movies: PropTypes.array,
+  getGenre: PropTypes.func,
+};
 
 export default MovieList;

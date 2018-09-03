@@ -48,7 +48,11 @@ class MovieDetails extends React.Component {
 
         <div>
           {this.props.similar.map(movie => (
-            <MoviePreview key={movie.id} movie={movie} />
+            <MoviePreview
+              key={movie.id}
+              movie={movie}
+              getGenre={this.props.getGenre}
+            />
           ))}
         </div>
       </div>
@@ -59,6 +63,7 @@ class MovieDetails extends React.Component {
 MovieDetails.propTypes = {
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
+  getGenre: PropTypes.func,
   memorizePrevSelectedId: PropTypes.func,
   memorizeCurrentSelectedId: PropTypes.func,
   ids: PropTypes.shape({

@@ -12,6 +12,7 @@ import {
   GET_MOVIE,
   GET_SIMILAR,
   GET_SEARCHED,
+  GET_GENRE,
   UPDATE_MOVIES,
   UPDATE_SELECTED_MOVIE,
   UPDATE_SIMILAR_MOVIES,
@@ -65,6 +66,13 @@ export function getSearched(query) {
   return {
     type: GET_SEARCHED,
     query,
+  };
+}
+
+export function getGenre(genreId) {
+  return {
+    type: GET_GENRE,
+    genreId,
   };
 }
 

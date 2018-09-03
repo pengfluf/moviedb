@@ -8,6 +8,7 @@ import {
   GET_MOVIE,
   GET_SIMILAR,
   GET_SEARCHED,
+  GET_GENRE,
 } from './constants';
 
 import {
@@ -16,19 +17,6 @@ import {
   updateSelectedMovie,
   updateSimilarMovies,
 } from './actions';
-
-export function* fetchGenreList() {
-  try {
-    const genreList = yield call(
-      axios.get,
-      `${API_URL}/genre/movie/list?api_key=${API_KEY}`,
-    );
-    return genreList;
-  } catch (error) {
-    yield put(receiveError(error));
-  }
-  return undefined;
-}
 
 export function* fetchPopular() {
   try {
@@ -80,11 +68,26 @@ export function* fetchSearched(action) {
   }
 }
 
+export function* fetchGenre(action) {
+  try {
+    const movies = yield call(
+      axios.get,
+      `${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=${
+        action.genreId
+      }`,
+    );
+    yield put(updateMovies(movies.data.results));
+  } catch (error) {
+    yield put(receiveError(error));
+  }
+}
+
 export default function* watcher() {
   yield [
     takeLatest(GET_POPULAR, fetchPopular),
     takeLatest(GET_MOVIE, fetchMovie),
     takeLatest(GET_SIMILAR, fetchSimilar),
     takeLatest(GET_SEARCHED, fetchSearched),
+    takeLatest(GET_GENRE, fetchGenre),
   ];
 }
