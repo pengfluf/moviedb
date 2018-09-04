@@ -18,6 +18,7 @@ function MovieList(props) {
         <MoviePreview
           key={movie.id}
           movie={movie}
+          selectedGenre={props.selectedGenre}
           getGenre={props.getGenre}
         />
       ))}
@@ -27,6 +28,7 @@ function MovieList(props) {
 
 MovieList.propTypes = {
   movies: PropTypes.array,
+  selectedGenre: PropTypes.string,
   getGenre: PropTypes.func,
 };
 

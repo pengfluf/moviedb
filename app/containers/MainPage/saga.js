@@ -14,17 +14,24 @@ import {
 import {
   receiveError,
   updateMovies,
+  addMoreMovies,
   updateSelectedMovie,
   updateSimilarMovies,
 } from './actions';
 
-export function* fetchPopular() {
+export function* fetchPopular(action) {
   try {
     const movies = yield call(
       axios.get,
-      `${API_URL}/movie/popular?page=1&api_key=${API_KEY}`,
+      `${API_URL}/movie/popular?page=${
+        action.page
+      }&api_key=${API_KEY}`,
     );
-    yield put(updateMovies(movies.data.results));
+    if (action.page > 1) {
+      yield put(addMoreMovies(movies.data));
+    } else {
+      yield put(updateMovies(movies.data));
+    }
   } catch (error) {
     yield put(receiveError(error));
   }
@@ -46,9 +53,11 @@ export function* fetchSimilar(action) {
   try {
     const movies = yield call(
       axios.get,
-      `${API_URL}/movie/${action.id}/similar?api_key=${API_KEY}`,
+      `${API_URL}/movie/${
+        action.id
+      }/similar?api_key=${API_KEY}&page=${action.page}`,
     );
-    yield put(updateSimilarMovies(movies.data.results));
+    yield put(updateSimilarMovies(movies.data));
   } catch (error) {
     yield put(receiveError(error));
   }
@@ -60,9 +69,13 @@ export function* fetchSearched(action) {
       axios.get,
       `${API_URL}/search/movie?api_key=${API_KEY}&query=${
         action.query
-      }&page=1`,
+      }&page=${action.page}`,
     );
-    yield put(updateMovies(movies.data.results));
+    if (action.page > 1) {
+      yield put(addMoreMovies(movies.data));
+    } else {
+      yield put(updateMovies(movies.data));
+    }
   } catch (error) {
     yield put(receiveError(error));
   }
@@ -74,9 +87,13 @@ export function* fetchGenre(action) {
       axios.get,
       `${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=${
         action.genreId
-      }`,
+      }&page=${action.page}`,
     );
-    yield put(updateMovies(movies.data.results));
+    if (action.page > 1) {
+      yield put(addMoreMovies(movies.data));
+    } else {
+      yield put(updateMovies(movies.data));
+    }
   } catch (error) {
     yield put(receiveError(error));
   }

@@ -6,6 +6,8 @@
 
 import { fromJS } from 'immutable';
 import {
+  LOGIN,
+  LOGOUT,
   START_FETCHING,
   STOP_FETCHING,
   RECEIVE_ERROR,
@@ -13,22 +15,34 @@ import {
   UPDATE_SELECTED_MOVIE,
   UPDATE_SIMILAR_MOVIES,
   UPDATE_QUERY,
+  ADD_MORE_MOVIES,
   ADD_TO_FAVORITES,
   REMOVE_FROM_FAVORITES,
   MEMORIZE_PREV_SELECTED_ID,
   MEMORIZE_CURRENT_SELECTED_ID,
+  GET_POPULAR,
+  GET_SEARCHED,
+  GET_GENRE,
 } from './constants';
 
 export const initialState = fromJS({
-  movies: [],
+  logged: false,
+  movies: {
+    page: null,
+    totalPages: null,
+    results: [],
+  },
   selectedMovie: {
     ids: {
       prev: null,
       current: null,
     },
     movie: {},
-    similar: [],
+    similar: {
+      results: [],
+    },
   },
+  selectedGenre: '',
   query: '',
   favorites: [],
   fetching: false,
@@ -37,6 +51,10 @@ export const initialState = fromJS({
 
 function mainPageReducer(state = initialState, action) {
   switch (action.type) {
+    case LOGIN:
+      return state.set('logged', true);
+    case LOGOUT:
+      return state.set('logged', false);
     case START_FETCHING:
       return state.set('error', null).set('fetching', true);
     case STOP_FETCHING:
@@ -44,7 +62,24 @@ function mainPageReducer(state = initialState, action) {
     case RECEIVE_ERROR:
       return state.set('error', action.error);
     case UPDATE_MOVIES:
-      return state.set('movies', fromJS(action.movies));
+      return state
+        .setIn(['movies', 'page'], action.movies.page)
+        .setIn(['movies', 'totalPages'], action.movies.total_pages)
+        .setIn(['movies', 'results'], fromJS(action.movies.results));
+    case ADD_MORE_MOVIES:
+      return state.withMutations(st => {
+        st.setIn(
+          ['movies', 'results'],
+          st
+            .getIn(['movies', 'results'])
+            .push(...action.movies.results),
+        );
+
+        st.setIn(['movies', 'page'], action.movies.page).setIn(
+          ['movies', 'totalPages'],
+          action.movies.total_pages,
+        );
+      });
     case UPDATE_SELECTED_MOVIE:
       return state.setIn(
         ['selectedMovie', 'movie'],
@@ -68,6 +103,12 @@ function mainPageReducer(state = initialState, action) {
         ['selectedMovie', 'ids', 'current'],
         action.id,
       );
+    case GET_POPULAR:
+      return state.set('selectedGenre', '');
+    case GET_SEARCHED:
+      return state.set('selectedGenre', '');
+    case GET_GENRE:
+      return state.set('selectedGenre', action.genreName);
     default:
       return state;
   }

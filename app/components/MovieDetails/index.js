@@ -28,7 +28,7 @@ class MovieDetails extends React.Component {
 
     if (prev !== current) {
       this.props.getMovie(id);
-      this.props.getSimilar(id);
+      this.props.getSimilar(id, 1);
       this.props.memorizePrevSelectedId(id);
       window.scrollTo(0, 0);
     }
@@ -47,7 +47,7 @@ class MovieDetails extends React.Component {
         </div>
 
         <div>
-          {this.props.similar.map(movie => (
+          {this.props.similar.results.map(movie => (
             <MoviePreview
               key={movie.id}
               movie={movie}
@@ -74,7 +74,9 @@ MovieDetails.propTypes = {
     original_title: PropTypes.string,
     overview: PropTypes.string,
   }),
-  similar: PropTypes.array,
+  similar: PropTypes.shape({
+    results: PropTypes.array,
+  }),
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

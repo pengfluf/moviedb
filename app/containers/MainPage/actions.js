@@ -5,6 +5,8 @@
  */
 
 import {
+  LOGIN,
+  LOGOUT,
   START_FETCHING,
   STOP_FETCHING,
   RECEIVE_ERROR,
@@ -13,6 +15,7 @@ import {
   GET_SIMILAR,
   GET_SEARCHED,
   GET_GENRE,
+  ADD_MORE_MOVIES,
   UPDATE_MOVIES,
   UPDATE_SELECTED_MOVIE,
   UPDATE_SIMILAR_MOVIES,
@@ -22,6 +25,18 @@ import {
   MEMORIZE_PREV_SELECTED_ID,
   MEMORIZE_CURRENT_SELECTED_ID,
 } from './constants';
+
+export function login() {
+  return {
+    type: LOGIN,
+  };
+}
+
+export function logout() {
+  return {
+    type: LOGOUT,
+  };
+}
 
 export function startFetching() {
   return {
@@ -42,9 +57,10 @@ export function receiveError(error) {
   };
 }
 
-export function getPopular() {
+export function getPopular(page) {
   return {
     type: GET_POPULAR,
+    page,
   };
 }
 
@@ -55,24 +71,35 @@ export function getMovie(id) {
   };
 }
 
-export function getSimilar(id) {
+export function getSimilar(id, page) {
   return {
     type: GET_SIMILAR,
     id,
+    page,
   };
 }
 
-export function getSearched(query) {
+export function getSearched(query, page) {
   return {
     type: GET_SEARCHED,
     query,
+    page,
   };
 }
 
-export function getGenre(genreId) {
+export function getGenre(genreId, genreName, page) {
   return {
     type: GET_GENRE,
     genreId,
+    genreName,
+    page,
+  };
+}
+
+export function addMoreMovies(movies) {
+  return {
+    type: ADD_MORE_MOVIES,
+    movies,
   };
 }
 

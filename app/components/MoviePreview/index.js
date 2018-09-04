@@ -7,7 +7,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import genres from 'helpers/genres';
 import getGenreNames from 'helpers/getGenreNames';
 import getGenreId from 'helpers/getGenreId';
 
@@ -26,7 +25,7 @@ function MoviePreview(props) {
     genre_ids: genreIds,
   } = props.movie;
 
-  const genreNames = getGenreNames(genres, genreIds);
+  const genreNames = getGenreNames(genreIds);
 
   return (
     <Wrapper>
@@ -41,7 +40,7 @@ function MoviePreview(props) {
             key={`${name}${id}`}
             to={`/genre/${name}`.replace(/ /g, '').toLowerCase()}
             onClick={() => {
-              props.getGenre(getGenreId(genres, name));
+              props.getGenre(getGenreId(name), name, 1);
               window.scrollTo(0, 0);
             }}
           >

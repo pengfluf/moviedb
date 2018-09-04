@@ -10,24 +10,30 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { withRouter } from 'react-router';
+import { withRouter, matchPath } from 'react-router';
 import { Switch, Route } from 'react-router-dom';
 
 import Header from 'components/Header';
 import MovieList from 'components/MovieList';
 import MovieDetails from 'components/MovieDetails';
 
+import scrollPercentageLeft from 'helpers/scrollPercentageLeft';
+import getGenreId from 'helpers/getGenreId';
+
 import injectSaga from 'utils/injectSaga';
 import makeSelectMainPage from './selectors';
 import saga from './saga';
 
 import {
+  login,
+  logout,
   getPopular,
   getMovie,
   getSimilar,
   getSearched,
   getGenre,
   updateQuery,
+  addMoreMovies,
   addToFavorites,
   removeFromFavorites,
   memorizePrevSelectedId,
@@ -42,27 +48,59 @@ export class MainPage extends React.Component {
   }
 
   render() {
-    const { movies, selectedMovie } = this.props.mainpage;
+    const {
+      selectedMovie,
+      selectedGenre,
+      logged,
+      query,
+    } = this.props.mainpage;
+    const { page, totalPages, results } = this.props.mainpage.movies;
 
     return (
-      <Wrapper>
+      <Wrapper
+        onWheel={() => {
+          const { pathname } = this.props.location;
+          if (scrollPercentageLeft() < 25 && page < totalPages) {
+            if (selectedGenre) {
+              this.props.getGenre(
+                getGenreId(selectedGenre),
+                selectedGenre,
+                page + 1,
+              );
+            } else if (query) {
+              this.props.getSearched(query, page + 1);
+            } else if (pathname === '/') {
+              this.props.getPopular(page + 1);
+            }
+          }
+        }}
+      >
         <Helmet>
           <title>Movie Database – Main Page</title>
           <meta name="description" content="Movie Database" />
         </Helmet>
         <Header
+          history={this.props.history}
+          logged={logged}
+          login={this.props.login}
+          logout={this.props.logout}
           query={this.props.mainpage.query}
           updateQuery={this.props.updateQuery}
           getSearched={this.props.getSearched}
           getPopular={this.props.getPopular}
         />
+        <h2>
+          {!this.props.location.pathname.includes('/movie/') &&
+            selectedGenre}
+        </h2>
         <Switch>
           <Route
             path="/genre/:genreName"
             render={props => (
               <MovieList
                 getGenre={this.props.getGenre}
-                movies={movies}
+                movies={results}
+                selectedGenre={selectedGenre}
                 {...props}
               />
             )}
@@ -93,7 +131,8 @@ export class MainPage extends React.Component {
             render={props => (
               <MovieList
                 getGenre={this.props.getGenre}
-                movies={movies}
+                movies={results}
+                selectedGenre={selectedGenre}
                 {...props}
               />
             )}
@@ -106,16 +145,26 @@ export class MainPage extends React.Component {
 
 MainPage.propTypes = {
   mainpage: PropTypes.shape({
-    movies: PropTypes.array,
+    logged: PropTypes.bool,
+    movies: PropTypes.shape({
+      page: PropTypes.number,
+      totalPages: PropTypes.number,
+      results: PropTypes.array,
+    }),
     selectedMovie: PropTypes.shape({
       movie: PropTypes.object,
-      similar: PropTypes.array,
+      similar: PropTypes.shape({
+        results: PropTypes.array,
+      }),
     }),
+    selectedGenre: PropTypes.string,
     query: PropTypes.string,
     favorites: PropTypes.array,
     fetching: PropTypes.bool,
     error: PropTypes.object,
   }),
+  login: PropTypes.func,
+  logout: PropTypes.func,
   getPopular: PropTypes.func,
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
@@ -132,6 +181,9 @@ MainPage.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -140,12 +192,15 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    getPopular: () => dispatch(getPopular()),
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout()),
+    getPopular: page => dispatch(getPopular(page)),
     getMovie: id => dispatch(getMovie(id)),
-    getSimilar: id => dispatch(getSimilar(id)),
-    getSearched: query => dispatch(getSearched(query)),
-    getGenre: genreId => dispatch(getGenre(genreId)),
+    getSimilar: (id, page) => dispatch(getSimilar(id, page)),
+    getSearched: (query, page) => dispatch(getSearched(query, page)),
+    getGenre: (id, name, page) => dispatch(getGenre(id, name, page)),
     updateQuery: query => dispatch(updateQuery(query)),
+    addMoreMovies: movies => dispatch(addMoreMovies(movies)),
     addToFavorites: movie => dispatch(addToFavorites(movie)),
     removeFromFavorites: index =>
       dispatch(removeFromFavorites(index)),
