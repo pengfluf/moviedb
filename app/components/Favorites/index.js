@@ -14,7 +14,7 @@ import MoviePreview from 'components/MoviePreview';
 function Favorites(props) {
   return (
     <div>
-      {props.favorites.length &&
+      {props.favorites.length ? (
         props.favorites.map(favorite => (
           <MoviePreview
             key={favorite.id}
@@ -24,7 +24,10 @@ function Favorites(props) {
             favorite={isFavorite(favorite.id, props.favorites)}
             favorites={props.favorites}
           />
-        ))}
+        ))
+      ) : (
+        <div>There{"'"}s no favorite movies yet</div>
+      )}
     </div>
   );
 }

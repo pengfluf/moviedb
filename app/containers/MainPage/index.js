@@ -94,10 +94,6 @@ export class MainPage extends React.Component {
           getSearched={this.props.getSearched}
           getPopular={this.props.getPopular}
         />
-        <h2>
-          {!this.props.location.pathname.includes('/movie/') &&
-            selectedGenre}
-        </h2>
         <Link to="/favorites">Favorites</Link>
         <Switch>
           <Route
@@ -132,12 +128,15 @@ export class MainPage extends React.Component {
                 getMovie={this.props.getMovie}
                 getSimilar={this.props.getSimilar}
                 getGenre={this.props.getGenre}
+                addToFavorites={this.props.addToFavorites}
+                removeFromFavorites={this.props.removeFromFavorites}
                 memorizePrevSelectedId={
                   this.props.memorizePrevSelectedId
                 }
                 memorizeCurrentSelectedId={
                   this.props.memorizeCurrentSelectedId
                 }
+                favorites={favorites}
                 ids={selectedMovie.ids}
                 movie={selectedMovie.movie}
                 similar={selectedMovie.similar}

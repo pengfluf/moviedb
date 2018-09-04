@@ -7,6 +7,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+import isFavorite from 'helpers/isFavorite';
+
 import MoviePreview from 'components/MoviePreview';
 
 class MovieDetails extends React.Component {
@@ -54,6 +57,10 @@ class MovieDetails extends React.Component {
                 key={movie.id}
                 movie={movie}
                 getGenre={this.props.getGenre}
+                addToFavorites={this.props.addToFavorites}
+                removeFromFavorites={this.props.removeFromFavorites}
+                favorite={isFavorite(movie.id, this.props.favorites)}
+                favorites={this.props.favorites}
               />
             ))
           ) : (
