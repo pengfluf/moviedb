@@ -10,12 +10,13 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { withRouter, matchPath } from 'react-router';
-import { Switch, Route } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { Switch, Route, Link } from 'react-router-dom';
 
 import Header from 'components/Header';
 import MovieList from 'components/MovieList';
 import MovieDetails from 'components/MovieDetails';
+import Favorites from 'components/Favorites';
 
 import scrollPercentageLeft from 'helpers/scrollPercentageLeft';
 import getGenreId from 'helpers/getGenreId';
@@ -45,6 +46,27 @@ import Wrapper from './styled/Wrapper';
 export class MainPage extends React.Component {
   componentDidMount() {
     this.props.getPopular();
+
+    this.onWheel = this.onWheel.bind(this);
+  }
+
+  onWheel() {
+    const { pathname } = this.props.location;
+    const { selectedGenre, query } = this.props.mainpage;
+    const { page, totalPages } = this.props.mainpage.movies;
+    if (scrollPercentageLeft() < 25 && page < totalPages) {
+      if (selectedGenre) {
+        this.props.getGenre(
+          getGenreId(selectedGenre),
+          selectedGenre,
+          page + 1,
+        );
+      } else if (query) {
+        this.props.getSearched(query, page + 1);
+      } else if (pathname === '/') {
+        this.props.getPopular(page + 1);
+      }
+    }
   }
 
   render() {
@@ -52,29 +74,12 @@ export class MainPage extends React.Component {
       selectedMovie,
       selectedGenre,
       logged,
-      query,
+      favorites,
     } = this.props.mainpage;
-    const { page, totalPages, results } = this.props.mainpage.movies;
+    const { results } = this.props.mainpage.movies;
 
     return (
-      <Wrapper
-        onWheel={() => {
-          const { pathname } = this.props.location;
-          if (scrollPercentageLeft() < 25 && page < totalPages) {
-            if (selectedGenre) {
-              this.props.getGenre(
-                getGenreId(selectedGenre),
-                selectedGenre,
-                page + 1,
-              );
-            } else if (query) {
-              this.props.getSearched(query, page + 1);
-            } else if (pathname === '/') {
-              this.props.getPopular(page + 1);
-            }
-          }
-        }}
-      >
+      <Wrapper onWheel={this.onWheel}>
         <Helmet>
           <title>Movie Database – Main Page</title>
           <meta name="description" content="Movie Database" />
@@ -93,12 +98,27 @@ export class MainPage extends React.Component {
           {!this.props.location.pathname.includes('/movie/') &&
             selectedGenre}
         </h2>
+        <Link to="/favorites">Favorites</Link>
         <Switch>
+          <Route
+            path="/favorites"
+            render={props => (
+              <Favorites
+                getGenre={this.props.getGenre}
+                removeFromFavorites={this.props.removeFromFavorites}
+                favorites={favorites}
+                {...props}
+              />
+            )}
+          />
           <Route
             path="/genre/:genreName"
             render={props => (
               <MovieList
                 getGenre={this.props.getGenre}
+                addToFavorites={this.props.addToFavorites}
+                removeFromFavorites={this.props.removeFromFavorites}
+                favorites={favorites}
                 movies={results}
                 selectedGenre={selectedGenre}
                 {...props}
@@ -131,6 +151,9 @@ export class MainPage extends React.Component {
             render={props => (
               <MovieList
                 getGenre={this.props.getGenre}
+                addToFavorites={this.props.addToFavorites}
+                removeFromFavorites={this.props.removeFromFavorites}
+                favorites={favorites}
                 movies={results}
                 selectedGenre={selectedGenre}
                 {...props}

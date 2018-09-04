@@ -90,12 +90,15 @@ function mainPageReducer(state = initialState, action) {
     case UPDATE_QUERY:
       return state.set('query', action.query);
     case ADD_TO_FAVORITES:
-      return state.setIn(
-        ['favorites', state.get('favorites').size],
-        action.movie,
+      return state.set(
+        'favorites',
+        state.get('favorites').push(action.movie),
       );
     case REMOVE_FROM_FAVORITES:
-      return state.delete('favorites', action.index);
+      return state.set(
+        'favorites',
+        state.get('favorites').delete(action.index),
+      );
     case MEMORIZE_PREV_SELECTED_ID:
       return state.setIn(['selectedMovie', 'ids', 'prev'], action.id);
     case MEMORIZE_CURRENT_SELECTED_ID:

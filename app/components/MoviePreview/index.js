@@ -29,6 +29,17 @@ function MoviePreview(props) {
 
   return (
     <Wrapper>
+      <button
+        onClick={() =>
+          props.favorite
+            ? props.removeFromFavorites(
+              props.favorites.findIndex(movie => movie.id === id),
+            )
+            : props.addToFavorites(props.movie)
+        }
+      >
+        {props.favorite ? 'Remove from' : 'Add to'} favorites
+      </button>
       <InfoWrapper to={`/movie/${id}`}>
         <Title>{title}</Title>
         <Overview>{overview}</Overview>
@@ -57,7 +68,10 @@ MoviePreview.propTypes = {
     original_title: PropTypes.string,
     overview: PropTypes.string,
   }),
-  getGenre: PropTypes.func,
+  favorite: PropTypes.bool,
+  favorites: PropTypes.array,
+  addToFavorites: PropTypes.func,
+  removeFromFavorites: PropTypes.func,
 };
 
 export default MoviePreview;

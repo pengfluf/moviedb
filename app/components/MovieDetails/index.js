@@ -36,6 +36,7 @@ class MovieDetails extends React.Component {
 
   render() {
     const { original_title: title, overview } = this.props.movie;
+    const { results } = this.props.similar;
     return (
       <div>
         <div>
@@ -47,13 +48,17 @@ class MovieDetails extends React.Component {
         </div>
 
         <div>
-          {this.props.similar.results.map(movie => (
-            <MoviePreview
-              key={movie.id}
-              movie={movie}
-              getGenre={this.props.getGenre}
-            />
-          ))}
+          {results.length ? (
+            results.map(movie => (
+              <MoviePreview
+                key={movie.id}
+                movie={movie}
+                getGenre={this.props.getGenre}
+              />
+            ))
+          ) : (
+            <div>There{"'"}s no similar movies :(</div>
+          )}
         </div>
       </div>
     );
