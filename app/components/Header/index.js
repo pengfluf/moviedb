@@ -7,47 +7,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Navigation from 'components/Navigation';
+import Search from 'components/Search';
+
+import Wrapper from './styled/Wrapper';
+import Logo from './styled/Logo';
+import Button from './styled/Button';
+
 function Header(props) {
   const {
     logged,
+    query,
+    selectedGenre,
     login,
     logout,
-    query,
     updateQuery,
     getSearched,
     getPopular,
+    getGenre,
+    history,
   } = props;
   return (
-    <div>
-      <input
-        type="text"
-        onChange={e => updateQuery(e.target.value)}
-        onKeyUp={e => {
-          if (query && e.key === 'Enter') {
-            getSearched(query);
-            props.history.push('/');
-          } else if (e.key === 'Enter') {
-            getPopular();
-            props.history.push('/');
-          }
-        }}
-      />
-      <button
+    <Wrapper>
+      <Logo
         onClick={() => {
-          props.history.push('/');
-          return query ? getSearched(query) : getPopular();
+          updateQuery('');
+          getPopular();
+          history.push('/');
+          window.scrollTo(0, 0);
         }}
       >
-        Search
-      </button>
-      <div>
-        {logged ? (
-          <button onClick={logout}>Logout</button>
-        ) : (
-          <button onClick={login}>Login</button>
-        )}
-      </div>
-    </div>
+        <use xlinkHref="#icon-camera" />
+      </Logo>
+
+      <Navigation
+        selectedGenre={selectedGenre}
+        logged={logged}
+        pathname={history.location.pathname}
+        getGenre={getGenre}
+      />
+
+      <Search
+        query={query}
+        updateQuery={updateQuery}
+        getSearched={getSearched}
+        getPopular={getPopular}
+        history={history}
+      />
+
+      <Button onClick={() => (logged ? logout() : login())}>
+        {logged ? 'Logout' : 'Login'}
+      </Button>
+    </Wrapper>
   );
 }
 
@@ -56,12 +67,14 @@ Header.propTypes = {
     push: PropTypes.func,
   }),
   logged: PropTypes.bool,
+  query: PropTypes.string,
+  selectedGenre: PropTypes.string,
   login: PropTypes.func,
   logout: PropTypes.func,
-  query: PropTypes.string,
   updateQuery: PropTypes.func,
   getSearched: PropTypes.func,
   getPopular: PropTypes.func,
+  getGenre: PropTypes.func,
 };
 
 export default Header;

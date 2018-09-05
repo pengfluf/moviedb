@@ -26,7 +26,6 @@ import 'file-loader?name=[name].[ext]!./.htaccess'; // eslint-disable-line impor
 import 'normalize.css';
 
 import 'styles/style.scss';
-import 'styles/fonts';
 
 import configureStore from './configureStore';
 

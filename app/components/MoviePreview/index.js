@@ -10,12 +10,15 @@ import PropTypes from 'prop-types';
 import getGenreNames from 'helpers/getGenreNames';
 import getGenreId from 'helpers/getGenreId';
 
+import GenreLink from 'components/GenreLink';
+import Star from 'components/Star';
+
 import Wrapper from './styled/Wrapper';
-import InfoWrapper from './styled/InfoWrapper';
+import TitleWrapper from './styled/TitleWrapper';
 import Title from './styled/Title';
 import Overview from './styled/Overview';
 import GenreWrapper from './styled/GenreWrapper';
-import Genre from './styled/Genre';
+import Info from './styled/Info';
 
 function MoviePreview(props) {
   const {
@@ -23,40 +26,48 @@ function MoviePreview(props) {
     overview,
     id,
     genre_ids: genreIds,
+    backdrop_path: imageUrl,
   } = props.movie;
+
+  const {
+    favorite,
+    favorites,
+    addToFavorites,
+    removeFromFavorites,
+    getGenre,
+  } = props;
 
   const genreNames = getGenreNames(genreIds);
 
   return (
-    <Wrapper>
-      <button
-        onClick={() =>
-          props.favorite
-            ? props.removeFromFavorites(
-              props.favorites.findIndex(movie => movie.id === id),
-            )
-            : props.addToFavorites(props.movie)
-        }
-      >
-        {props.favorite ? 'Remove from' : 'Add to'} favorites
-      </button>
-      <InfoWrapper to={`/movie/${id}`}>
-        <Title>{title}</Title>
+    <Wrapper backgroundUrl={imageUrl}>
+      <Info>
+        <TitleWrapper>
+          <Title to={`/movie/${id}`}>{title}</Title>
+          <Star
+            logged={props.logged}
+            movie={props.movie}
+            favorite={favorite}
+            favorites={favorites}
+            addToFavorites={addToFavorites}
+            removeFromFavorites={removeFromFavorites}
+            context="MoviePreview"
+          />
+        </TitleWrapper>
         <Overview>{overview}</Overview>
-      </InfoWrapper>
+      </Info>
 
       <GenreWrapper>
         {genreNames.map(name => (
-          <Genre
+          <GenreLink
             key={`${name}${id}`}
-            to={`/genre/${name}`.replace(/ /g, '').toLowerCase()}
-            onClick={() => {
-              props.getGenre(getGenreId(name), name, 1);
-              window.scrollTo(0, 0);
-            }}
+            id={getGenreId(name)}
+            name={name}
+            getGenre={getGenre}
+            context="MoviePreview"
           >
             {name}
-          </Genre>
+          </GenreLink>
         ))}
       </GenreWrapper>
     </Wrapper>
@@ -64,6 +75,7 @@ function MoviePreview(props) {
 }
 
 MoviePreview.propTypes = {
+  logged: PropTypes.bool,
   movie: PropTypes.shape({
     original_title: PropTypes.string,
     overview: PropTypes.string,
@@ -72,6 +84,7 @@ MoviePreview.propTypes = {
   favorites: PropTypes.array,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
+  getGenre: PropTypes.func,
 };
 
 export default MoviePreview;

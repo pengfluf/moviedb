@@ -6,11 +6,18 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
+
 import MainPage from 'containers/MainPage';
+import SvgSprite from 'components/SvgSprite';
 
 function App() {
-  return <MainPage />;
+  return (
+    <Fragment>
+      <MainPage />
+      <SvgSprite />
+    </Fragment>
+  );
 }
 
 export default App;

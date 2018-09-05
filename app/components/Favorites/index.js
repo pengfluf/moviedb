@@ -10,29 +10,44 @@ import PropTypes from 'prop-types';
 import isFavorite from 'helpers/isFavorite';
 
 import MoviePreview from 'components/MoviePreview';
+import Grid from 'components/Grid';
 
-function Favorites(props) {
-  return (
-    <div>
-      {props.favorites.length ? (
-        props.favorites.map(favorite => (
-          <MoviePreview
-            key={favorite.id}
-            movie={favorite}
-            getGenre={props.getGenre}
-            removeFromFavorites={props.removeFromFavorites}
-            favorite={isFavorite(favorite.id, props.favorites)}
-            favorites={props.favorites}
-          />
-        ))
-      ) : (
-        <div>There{"'"}s no favorite movies yet</div>
-      )}
-    </div>
-  );
+function Favorites({
+  logged,
+  favorites,
+  getGenre,
+  removeFromFavorites,
+}) {
+  if (logged) {
+    return (
+      <div>
+        <h1>Favorite Movies</h1>
+        <Grid>
+          {favorites.length ? (
+            favorites.map(favorite => (
+              <MoviePreview
+                key={favorite.id}
+                logged={logged}
+                movie={favorite}
+                getGenre={getGenre}
+                removeFromFavorites={removeFromFavorites}
+                favorite={isFavorite(favorite.id, favorites)}
+                favorites={favorites}
+              />
+            ))
+          ) : (
+            <div>There{"'"}s no favorite movies yet</div>
+          )}
+        </Grid>
+      </div>
+    );
+  }
+  return null;
 }
 
 Favorites.propTypes = {
+  logged: PropTypes.bool,
+  fetching: PropTypes.bool,
   favorites: PropTypes.array,
   getGenre: PropTypes.func,
   removeFromFavorites: PropTypes.func,

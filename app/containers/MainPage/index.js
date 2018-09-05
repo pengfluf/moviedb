@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 import Header from 'components/Header';
 import MovieList from 'components/MovieList';
@@ -24,6 +24,8 @@ import getGenreId from 'helpers/getGenreId';
 import injectSaga from 'utils/injectSaga';
 import makeSelectMainPage from './selectors';
 import saga from './saga';
+
+import Loading from 'components/Loading';
 
 import {
   login,
@@ -54,7 +56,7 @@ export class MainPage extends React.Component {
     const { pathname } = this.props.location;
     const { selectedGenre, query } = this.props.mainpage;
     const { page, totalPages } = this.props.mainpage.movies;
-    if (scrollPercentageLeft() < 25 && page < totalPages) {
+    if (scrollPercentageLeft() < 20 && page < totalPages) {
       if (selectedGenre) {
         this.props.getGenre(
           getGenreId(selectedGenre),
@@ -73,7 +75,9 @@ export class MainPage extends React.Component {
     const {
       selectedMovie,
       selectedGenre,
+      query,
       logged,
+      fetching,
       favorites,
     } = this.props.mainpage;
     const { results } = this.props.mainpage.movies;
@@ -85,38 +89,26 @@ export class MainPage extends React.Component {
           <meta name="description" content="Movie Database" />
         </Helmet>
         <Header
-          history={this.props.history}
           logged={logged}
+          query={query}
+          selectedGenre={selectedGenre}
           login={this.props.login}
           logout={this.props.logout}
-          query={this.props.mainpage.query}
           updateQuery={this.props.updateQuery}
           getSearched={this.props.getSearched}
           getPopular={this.props.getPopular}
+          getGenre={this.props.getGenre}
+          history={this.props.history}
         />
-        <Link to="/favorites">Favorites</Link>
         <Switch>
           <Route
             path="/favorites"
             render={props => (
               <Favorites
+                logged={logged}
                 getGenre={this.props.getGenre}
                 removeFromFavorites={this.props.removeFromFavorites}
                 favorites={favorites}
-                {...props}
-              />
-            )}
-          />
-          <Route
-            path="/genre/:genreName"
-            render={props => (
-              <MovieList
-                getGenre={this.props.getGenre}
-                addToFavorites={this.props.addToFavorites}
-                removeFromFavorites={this.props.removeFromFavorites}
-                favorites={favorites}
-                movies={results}
-                selectedGenre={selectedGenre}
                 {...props}
               />
             )}
@@ -125,6 +117,8 @@ export class MainPage extends React.Component {
             path="/movie/:id"
             render={props => (
               <MovieDetails
+                fetching={fetching}
+                logged={logged}
                 getMovie={this.props.getMovie}
                 getSimilar={this.props.getSimilar}
                 getGenre={this.props.getGenre}
@@ -145,10 +139,11 @@ export class MainPage extends React.Component {
             )}
           />
           <Route
-            exact
             path="/"
             render={props => (
               <MovieList
+                fetching={fetching}
+                logged={logged}
                 getGenre={this.props.getGenre}
                 addToFavorites={this.props.addToFavorites}
                 removeFromFavorites={this.props.removeFromFavorites}

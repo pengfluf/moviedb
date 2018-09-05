@@ -4,35 +4,44 @@
  *
  */
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import isFavorite from 'helpers/isFavorite';
 
+import Grid from 'components/Grid';
 import MoviePreview from 'components/MoviePreview';
-
-import Wrapper from './styled/Wrapper';
+import Loading from 'components/Loading';
 
 function MovieList(props) {
+  if (props.fetching && !props.movies.length) {
+    return <Loading mode="standalone" />;
+  }
   return (
-    <Wrapper>
-      {props.movies.map(movie => (
-        <MoviePreview
-          key={movie.id}
-          movie={movie}
-          selectedGenre={props.selectedGenre}
-          getGenre={props.getGenre}
-          addToFavorites={props.addToFavorites}
-          removeFromFavorites={props.removeFromFavorites}
-          favorite={isFavorite(movie.id, props.favorites)}
-          favorites={props.favorites}
-        />
-      ))}
-    </Wrapper>
+    <Fragment>
+      <Grid>
+        {props.movies.map(movie => (
+          <MoviePreview
+            key={movie.id}
+            logged={props.logged}
+            movie={movie}
+            selectedGenre={props.selectedGenre}
+            getGenre={props.getGenre}
+            addToFavorites={props.addToFavorites}
+            removeFromFavorites={props.removeFromFavorites}
+            favorite={isFavorite(movie.id, props.favorites)}
+            favorites={props.favorites}
+          />
+        ))}
+      </Grid>
+      {props.fetching && <Loading mode="additional" />}
+    </Fragment>
   );
 }
 
 MovieList.propTypes = {
+  fetching: PropTypes.bool,
+  logged: PropTypes.bool,
   movies: PropTypes.array,
   selectedGenre: PropTypes.string,
   getGenre: PropTypes.func,
