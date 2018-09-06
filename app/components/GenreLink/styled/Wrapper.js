@@ -1,19 +1,20 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+/* eslint-disable prettier/prettier */
 const Wrapper = styled(Link)`
   text-decoration: none;
+  white-space: nowrap;
+  border-radius: 3px;
+
   padding: ${({ context }) =>
     context === 'Navigation' ? '15px' : 0};
-  white-space: nowrap;
   color: ${({ context }) =>
     context === 'MoviePreview' ? '#fff' : '#000'};
 
   &:not(:first-child) {
     margin-left: ${({ context }) =>
-      context !== 'Navigation' ? '10px' : 0};
+    context !== 'Navigation' ? '10px' : 0};
   }
-  border-radius: 3px;
 
   &:hover {
     text-decoration: ${({ context }) =>

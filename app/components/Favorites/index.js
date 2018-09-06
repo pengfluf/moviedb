@@ -47,7 +47,6 @@ function Favorites({
 
 Favorites.propTypes = {
   logged: PropTypes.bool,
-  fetching: PropTypes.bool,
   favorites: PropTypes.array,
   getGenre: PropTypes.func,
   removeFromFavorites: PropTypes.func,

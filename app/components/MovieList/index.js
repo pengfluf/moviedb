@@ -44,7 +44,6 @@ MovieList.propTypes = {
   fetching: PropTypes.bool,
   logged: PropTypes.bool,
   movies: PropTypes.array,
-  selectedGenre: PropTypes.string,
   getGenre: PropTypes.func,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,

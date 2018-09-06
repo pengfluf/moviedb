@@ -1,19 +1,24 @@
 import styled from 'styled-components';
 
 const Poster = styled.div`
+  font-size: 30px;
+
+  display: flex;
+
   height: 100%;
-  background-image: url('${props =>
-    `https://image.tmdb.org/t/p/original${props.url}`}');
-  background-size: 100% auto;
+
+  border-radius: 5px;
+  background-color: antiquewhite;
+  /* stylelint-disable */
+  background-image: url("${props =>
+    `https://image.tmdb.org/t/p/original${props.url}`}");
+  /* stylelint-enable */
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 5px;
-  height: 100%;
-  background-color: antiquewhite;
-  display: flex;
+  background-size: 100% auto;
+
   justify-content: center;
   align-items: center;
-  font-size: 30px;
 `;
 
 export default Poster;

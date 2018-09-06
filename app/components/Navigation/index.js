@@ -20,6 +20,7 @@ function Navigation({ selectedGenre, logged, pathname, getGenre }) {
     <Wrapper>
       {logged && <Title to="/favorites">Favorites</Title>}
 
+      {/* eslint-disable prettier/prettier */}
       <Title
         to={
           selectedGenre
@@ -32,6 +33,7 @@ function Navigation({ selectedGenre, logged, pathname, getGenre }) {
       >
         {selectedGenre || 'Genres'}
       </Title>
+      {/* eslint-enable */}
 
       <GenreList>
         {genres.map(

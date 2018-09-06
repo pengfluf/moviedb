@@ -60,7 +60,7 @@ function mainPageReducer(state = initialState, action) {
     case STOP_FETCHING:
       return state.set('fetching', false);
     case RECEIVE_ERROR:
-      return state.set('error', action.error);
+      return state.set('error', fromJS(action.error));
     case UPDATE_MOVIES:
       return state
         .setIn(['movies', 'page'], action.movies.page)

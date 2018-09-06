@@ -21,6 +21,7 @@ function Star({
 }) {
   if (logged) {
     return (
+      /* eslint-disable prettier/prettier */
       <Wrapper
         context={context}
         onClick={() =>
@@ -33,6 +34,7 @@ function Star({
             : addToFavorites(movie)
         }
       >
+        {/* eslint-enable */}
         <use
           xlinkHref={`#icon-star-${favorite ? 'filled' : 'empty'}`}
         />

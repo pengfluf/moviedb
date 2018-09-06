@@ -14,11 +14,8 @@ import GenreLink from 'components/GenreLink';
 import Grid from 'components/Grid';
 import Loading from 'components/Loading';
 import Star from 'components/Star';
-import GoBack from 'components/GoBack';
 
-import Wrapper from './styled/Wrapper';
 import Movie from './styled/Movie';
-import MovieInfo from './styled/MovieInfo';
 import MovieTitle from './styled/MovieTitle';
 import SectionTitle from './styled/SectionTitle';
 import Overview from './styled/Overview';
@@ -62,13 +59,13 @@ class MovieDetails extends React.Component {
     const { results } = this.props.similar;
     if (!this.props.fetching) {
       return (
-        <Wrapper>
+        <div>
           <Movie>
             <Poster url={posterUrl}>
               {!posterUrl && 'Poster is missing'}
             </Poster>
 
-            <MovieInfo>
+            <div>
               <MovieTitleWrapper>
                 <MovieTitle>{title}</MovieTitle>
                 <Star
@@ -97,7 +94,7 @@ class MovieDetails extends React.Component {
                   ))}
               </Genres>
               <Overview>{overview}</Overview>
-            </MovieInfo>
+            </div>
           </Movie>
 
           <SimilarMovies>
@@ -126,7 +123,7 @@ class MovieDetails extends React.Component {
               )}
             </Grid>
           </SimilarMovies>
-        </Wrapper>
+        </div>
       );
     }
     return <Loading />;
@@ -162,9 +159,6 @@ MovieDetails.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
-  }),
-  history: PropTypes.shape({
-    goBack: PropTypes.func,
   }),
 };
 
