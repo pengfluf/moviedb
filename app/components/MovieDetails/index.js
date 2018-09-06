@@ -13,15 +13,19 @@ import MoviePreview from 'components/MoviePreview';
 import GenreLink from 'components/GenreLink';
 import Grid from 'components/Grid';
 import Loading from 'components/Loading';
+import Star from 'components/Star';
+import GoBack from 'components/GoBack';
 
 import Wrapper from './styled/Wrapper';
-import GoBack from './styled/GoBack';
 import Movie from './styled/Movie';
+import MovieInfo from './styled/MovieInfo';
 import MovieTitle from './styled/MovieTitle';
 import SectionTitle from './styled/SectionTitle';
 import Overview from './styled/Overview';
 import Genres from './styled/Genres';
 import SimilarMovies from './styled/SimilarMovies';
+import Poster from './styled/Poster';
+import MovieTitleWrapper from './styled/MovieTitleWrapper';
 
 class MovieDetails extends React.Component {
   componentDidMount() {
@@ -53,31 +57,47 @@ class MovieDetails extends React.Component {
       original_title: title,
       overview,
       genres,
+      poster_path: posterUrl,
     } = this.props.movie;
     const { results } = this.props.similar;
     if (!this.props.fetching) {
       return (
         <Wrapper>
-          <GoBack onClick={() => this.props.history.goBack()}>
-            <svg>
-              <use xlinkHref="#icon-back" />
-            </svg>
-          </GoBack>
           <Movie>
-            <MovieTitle>{title}</MovieTitle>
-            <Overview>{overview}</Overview>
-            <Genres>
-              {genres &&
-                genres.map(({ id, name }) => (
-                  <GenreLink
-                    key={id}
-                    id={id}
-                    name={name}
-                    getGenre={this.props.getGenre}
-                    context="MovieDetails"
-                  />
-                ))}
-            </Genres>
+            <Poster url={posterUrl}>
+              {!posterUrl && 'Poster is missing'}
+            </Poster>
+
+            <MovieInfo>
+              <MovieTitleWrapper>
+                <MovieTitle>{title}</MovieTitle>
+                <Star
+                  logged={this.props.logged}
+                  movie={this.props.movie}
+                  favorite={isFavorite(
+                    this.props.movie.id,
+                    this.props.favorites,
+                  )}
+                  favorites={this.props.favorites}
+                  addToFavorites={this.props.addToFavorites}
+                  removeFromFavorites={this.props.removeFromFavorites}
+                  context="MovieDetails"
+                />
+              </MovieTitleWrapper>
+              <Genres>
+                {genres &&
+                  genres.map(({ id, name }) => (
+                    <GenreLink
+                      key={id}
+                      id={id}
+                      name={name}
+                      getGenre={this.props.getGenre}
+                      context="MovieDetails"
+                    />
+                  ))}
+              </Genres>
+              <Overview>{overview}</Overview>
+            </MovieInfo>
           </Movie>
 
           <SimilarMovies>
@@ -121,15 +141,18 @@ MovieDetails.propTypes = {
   removeFromFavorites: PropTypes.func,
   memorizePrevSelectedId: PropTypes.func,
   memorizeCurrentSelectedId: PropTypes.func,
+  fetching: PropTypes.bool,
   logged: PropTypes.bool,
   ids: PropTypes.shape({
     prev: PropTypes.string,
     current: PropTypes.string,
   }),
   movie: PropTypes.shape({
+    id: PropTypes.number,
     original_title: PropTypes.string,
     overview: PropTypes.string,
     genres: PropTypes.array,
+    poster_path: PropTypes.string,
   }),
   similar: PropTypes.shape({
     results: PropTypes.array,

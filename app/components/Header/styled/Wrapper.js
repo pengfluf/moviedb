@@ -9,8 +9,9 @@ const Wrapper = styled.div`
   display: flex;
 
   padding: 5px 20px;
+  max-height: 60px;
 
-  outline: 1px solid black;
+  outline: 1px solid rgba(0, 0, 0, 0.4);
   background-color: #fff;
 
   justify-content: space-between;

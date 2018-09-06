@@ -29,9 +29,11 @@ function Search(props) {
           if (query && e.key === 'Enter') {
             getSearched(query);
             history.push('/');
+            window.scrollTo(0, 0);
           } else if (e.key === 'Enter') {
             getPopular();
-            props.history.push('/');
+            history.push('/');
+            window.scrollTo(0, 0);
           }
         }}
       />
@@ -43,6 +45,7 @@ function Search(props) {
             getPopular();
           }
           history.push('/');
+          window.scrollTo(0, 0);
         }}
       >
         <svg>

@@ -16,6 +16,8 @@ import Loading from 'components/Loading';
 function MovieList(props) {
   if (props.fetching && !props.movies.length) {
     return <Loading mode="standalone" />;
+  } else if (!props.fetching && !props.movies.length) {
+    return <div>Nothing was found</div>;
   }
   return (
     <Fragment>
@@ -25,7 +27,6 @@ function MovieList(props) {
             key={movie.id}
             logged={props.logged}
             movie={movie}
-            selectedGenre={props.selectedGenre}
             getGenre={props.getGenre}
             addToFavorites={props.addToFavorites}
             removeFromFavorites={props.removeFromFavorites}

@@ -26,6 +26,7 @@ function MoviePreview(props) {
     overview,
     id,
     genre_ids: genreIds,
+    genres,
     backdrop_path: imageUrl,
   } = props.movie;
 
@@ -37,7 +38,12 @@ function MoviePreview(props) {
     getGenre,
   } = props;
 
-  const genreNames = getGenreNames(genreIds);
+  // Why genreIds and genres both? Because of
+  // the server response. It has different fields
+  // depends on the endpoint. It's weird.
+  const genreNames = getGenreNames(
+    genreIds || genres.map(genre => genre.id),
+  );
 
   return (
     <Wrapper backgroundUrl={imageUrl}>

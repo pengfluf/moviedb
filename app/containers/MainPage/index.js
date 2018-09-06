@@ -20,12 +20,11 @@ import Favorites from 'components/Favorites';
 
 import scrollPercentageLeft from 'helpers/scrollPercentageLeft';
 import getGenreId from 'helpers/getGenreId';
+import isFavorite from 'helpers/isFavorite';
 
 import injectSaga from 'utils/injectSaga';
 import makeSelectMainPage from './selectors';
 import saga from './saga';
-
-import Loading from 'components/Loading';
 
 import {
   login,
@@ -46,13 +45,19 @@ import {
 import Wrapper from './styled/Wrapper';
 
 export class MainPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onScroll = this.onScroll.bind(this);
+  }
+
   componentDidMount() {
     this.props.getPopular();
 
-    this.onWheel = this.onWheel.bind(this);
+    window.addEventListener('scroll', this.onScroll, true);
   }
 
-  onWheel() {
+  onScroll() {
     const { pathname } = this.props.location;
     const { selectedGenre, query } = this.props.mainpage;
     const { page, totalPages } = this.props.mainpage.movies;
@@ -83,7 +88,7 @@ export class MainPage extends React.Component {
     const { results } = this.props.mainpage.movies;
 
     return (
-      <Wrapper onWheel={this.onWheel}>
+      <Wrapper>
         <Helmet>
           <title>Movie Database – Main Page</title>
           <meta name="description" content="Movie Database" />
@@ -130,6 +135,10 @@ export class MainPage extends React.Component {
                 memorizeCurrentSelectedId={
                   this.props.memorizeCurrentSelectedId
                 }
+                favorite={isFavorite(
+                  selectedMovie.movie.id,
+                  favorites,
+                )}
                 favorites={favorites}
                 ids={selectedMovie.ids}
                 movie={selectedMovie.movie}

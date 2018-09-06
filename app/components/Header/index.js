@@ -55,7 +55,10 @@ function Header(props) {
         history={history}
       />
 
-      <Button onClick={() => (logged ? logout() : login())}>
+      <Button
+        logged={logged}
+        onClick={() => (logged ? logout() : login())}
+      >
         {logged ? 'Logout' : 'Login'}
       </Button>
     </Wrapper>
