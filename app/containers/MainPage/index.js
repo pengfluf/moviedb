@@ -29,6 +29,7 @@ import saga from './saga';
 import {
   login,
   logout,
+  getFavoritesFromLS,
   getPopular,
   getMovie,
   getSimilar,
@@ -49,12 +50,22 @@ export class MainPage extends React.Component {
     super(props);
 
     this.onScroll = this.onScroll.bind(this);
+    this.addToFavorites = this.addToFavorites.bind(this);
+    this.removeFromFavorites = this.removeFromFavorites.bind(this);
   }
 
   componentDidMount() {
     this.props.getPopular();
 
     window.addEventListener('scroll', this.onScroll, true);
+
+    const favorites = JSON.parse(localStorage.getItem('favorites'));
+
+    if (!favorites) {
+      localStorage.setItem('favorites', JSON.stringify([]));
+    }
+
+    this.props.getFavoritesFromLS();
   }
 
   onScroll() {
@@ -74,6 +85,27 @@ export class MainPage extends React.Component {
         this.props.getPopular(page + 1);
       }
     }
+  }
+
+  addToFavorites(movie) {
+    const promise = new Promise(resolve => {
+      this.props.addToFavorites(movie);
+      resolve();
+    });
+
+    promise.then(() => {
+      const { favorites } = this.props.mainpage;
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    });
+  }
+
+  removeFromFavorites(index) {
+    this.props.removeFromFavorites(index);
+
+    const favorites = JSON.parse(localStorage.getItem('favorites'));
+    favorites.splice(index, 1);
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
   }
 
   render() {
@@ -112,7 +144,7 @@ export class MainPage extends React.Component {
               <Favorites
                 logged={logged}
                 getGenre={this.props.getGenre}
-                removeFromFavorites={this.props.removeFromFavorites}
+                removeFromFavorites={this.removeFromFavorites}
                 favorites={favorites}
                 {...props}
               />
@@ -127,8 +159,8 @@ export class MainPage extends React.Component {
                 getMovie={this.props.getMovie}
                 getSimilar={this.props.getSimilar}
                 getGenre={this.props.getGenre}
-                addToFavorites={this.props.addToFavorites}
-                removeFromFavorites={this.props.removeFromFavorites}
+                addToFavorites={this.addToFavorites}
+                removeFromFavorites={this.removeFromFavorites}
                 memorizePrevSelectedId={
                   this.props.memorizePrevSelectedId
                 }
@@ -154,8 +186,8 @@ export class MainPage extends React.Component {
                 fetching={fetching}
                 logged={logged}
                 getGenre={this.props.getGenre}
-                addToFavorites={this.props.addToFavorites}
-                removeFromFavorites={this.props.removeFromFavorites}
+                addToFavorites={this.addToFavorites}
+                removeFromFavorites={this.removeFromFavorites}
                 favorites={favorites}
                 movies={results}
                 selectedGenre={selectedGenre}
@@ -191,6 +223,7 @@ MainPage.propTypes = {
   }),
   login: PropTypes.func,
   logout: PropTypes.func,
+  getFavoritesFromLS: PropTypes.func,
   getPopular: PropTypes.func,
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
@@ -220,6 +253,7 @@ function mapDispatchToProps(dispatch) {
   return {
     login: () => dispatch(login()),
     logout: () => dispatch(logout()),
+    getFavoritesFromLS: () => dispatch(getFavoritesFromLS()),
     getPopular: page => dispatch(getPopular(page)),
     getMovie: id => dispatch(getMovie(id)),
     getSimilar: (id, page) => dispatch(getSimilar(id, page)),

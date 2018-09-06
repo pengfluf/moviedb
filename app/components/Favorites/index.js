@@ -42,7 +42,7 @@ function Favorites({
       </div>
     );
   }
-  return null;
+  return <div>You{"'"}re not logged to see favorite movies</div>;
 }
 
 Favorites.propTypes = {
