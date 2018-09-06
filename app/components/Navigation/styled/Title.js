@@ -2,8 +2,11 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 const Title = styled(NavLink)`
+  &:not(:first-child) {
+    margin-left: 20px;
+  }
+
   cursor: pointer;
-  margin-left: 10px;
   font-size: 22px;
   display: inline-block;
   text-decoration: none;

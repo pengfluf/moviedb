@@ -7,7 +7,7 @@
 import {
   LOGIN,
   LOGOUT,
-  GET_FAVORITES_FROM_LS,
+  GET_STATE_FROM_LS,
   START_FETCHING,
   STOP_FETCHING,
   RECEIVE_ERROR,
@@ -39,9 +39,9 @@ export function logout() {
   };
 }
 
-export function getFavoritesFromLS() {
+export function getStateFromLS() {
   return {
-    type: GET_FAVORITES_FROM_LS,
+    type: GET_STATE_FROM_LS,
   };
 }
 

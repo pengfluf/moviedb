@@ -8,7 +8,7 @@ import { fromJS } from 'immutable';
 import {
   LOGIN,
   LOGOUT,
-  GET_FAVORITES_FROM_LS,
+  GET_STATE_FROM_LS,
   START_FETCHING,
   STOP_FETCHING,
   RECEIVE_ERROR,
@@ -56,13 +56,15 @@ function mainPageReducer(state = initialState, action) {
       return state.set('logged', true);
     case LOGOUT:
       return state.set('logged', false);
-    case GET_FAVORITES_FROM_LS:
-      return state.set(
-        'favorites',
-        state
-          .get('favorites')
-          .push(...JSON.parse(localStorage.getItem('favorites'))),
-      );
+    case GET_STATE_FROM_LS:
+      return state
+        .set(
+          'favorites',
+          state
+            .get('favorites')
+            .push(...JSON.parse(localStorage.getItem('favorites'))),
+        )
+        .set('logged', localStorage.getItem('logged') === 'true');
     case START_FETCHING:
       return state.set('error', null).set('fetching', true);
     case STOP_FETCHING:

@@ -1,6 +1,7 @@
 import {
   LOGIN,
   LOGOUT,
+  GET_STATE_FROM_LS,
   START_FETCHING,
   STOP_FETCHING,
   RECEIVE_ERROR,
@@ -23,6 +24,7 @@ import {
 import {
   login,
   logout,
+  getStateFromLS,
   startFetching,
   stopFetching,
   receiveError,
@@ -58,6 +60,15 @@ describe('MainPage Actions', () => {
         type: LOGOUT,
       };
       expect(logout()).toEqual(expected);
+    });
+  });
+
+  describe('getStateFromLS action', () => {
+    it('Returns the correct type and passed arguments', () => {
+      const expected = {
+        type: GET_STATE_FROM_LS,
+      };
+      expect(getStateFromLS()).toEqual(expected);
     });
   });
 

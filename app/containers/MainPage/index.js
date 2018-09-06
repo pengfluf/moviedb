@@ -29,7 +29,7 @@ import saga from './saga';
 import {
   login,
   logout,
-  getFavoritesFromLS,
+  getStateFromLS,
   getPopular,
   getMovie,
   getSimilar,
@@ -50,6 +50,8 @@ export class MainPage extends React.Component {
     super(props);
 
     this.onScroll = this.onScroll.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
     this.addToFavorites = this.addToFavorites.bind(this);
     this.removeFromFavorites = this.removeFromFavorites.bind(this);
   }
@@ -60,12 +62,16 @@ export class MainPage extends React.Component {
     window.addEventListener('scroll', this.onScroll, true);
 
     const favorites = JSON.parse(localStorage.getItem('favorites'));
-
     if (!favorites) {
       localStorage.setItem('favorites', JSON.stringify([]));
     }
 
-    this.props.getFavoritesFromLS();
+    const logged = JSON.parse(localStorage.getItem('logged'));
+    if (!logged) {
+      localStorage.setItem('logged', 'false');
+    }
+
+    this.props.getStateFromLS();
   }
 
   onScroll() {
@@ -85,6 +91,16 @@ export class MainPage extends React.Component {
         this.props.getPopular(page + 1);
       }
     }
+  }
+
+  login() {
+    this.props.login();
+    localStorage.setItem('logged', 'true');
+  }
+
+  logout() {
+    this.props.logout();
+    localStorage.setItem('logged', 'false');
   }
 
   addToFavorites(movie) {
@@ -129,8 +145,8 @@ export class MainPage extends React.Component {
           logged={logged}
           query={query}
           selectedGenre={selectedGenre}
-          login={this.props.login}
-          logout={this.props.logout}
+          login={this.login}
+          logout={this.logout}
           updateQuery={this.props.updateQuery}
           getSearched={this.props.getSearched}
           getPopular={this.props.getPopular}
@@ -223,7 +239,7 @@ MainPage.propTypes = {
   }),
   login: PropTypes.func,
   logout: PropTypes.func,
-  getFavoritesFromLS: PropTypes.func,
+  getStateFromLS: PropTypes.func,
   getPopular: PropTypes.func,
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
@@ -253,7 +269,7 @@ function mapDispatchToProps(dispatch) {
   return {
     login: () => dispatch(login()),
     logout: () => dispatch(logout()),
-    getFavoritesFromLS: () => dispatch(getFavoritesFromLS()),
+    getStateFromLS: () => dispatch(getStateFromLS()),
     getPopular: page => dispatch(getPopular(page)),
     getMovie: id => dispatch(getMovie(id)),
     getSimilar: (id, page) => dispatch(getSimilar(id, page)),
