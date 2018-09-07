@@ -24,13 +24,12 @@ function MovieList({
   removeFromFavorites,
   favorites,
 }) {
-  if (fetching && selectedGenre.prev !== selectedGenre.current) {
-    return <Loading mode="standalone" />;
-  } else if (!fetching && !movies.length) {
+  if (!fetching && !movies.length) {
     return <div>Nothing was found</div>;
   }
   return (
     <Fragment>
+      {fetching && !movies.length && <Loading mode="additional" />}
       <Grid>
         {movies.map(movie => (
           <MoviePreview
@@ -47,7 +46,7 @@ function MovieList({
           />
         ))}
       </Grid>
-      {fetching && <Loading mode="additional" />}
+      {fetching && movies.length && <Loading mode="additional" />}
     </Fragment>
   );
 }

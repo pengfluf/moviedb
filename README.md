@@ -20,6 +20,6 @@ Start the application at localhost:3000
 
 `yarn start` or `npm start`
 
-Tests
+Test
 
-`yarn test`
+`yarn test` or `npm run start`
