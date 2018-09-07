@@ -51,13 +51,24 @@ class MovieDetails extends React.Component {
 
   render() {
     const {
+      movie,
+      similar,
+      logged,
+      fetching,
+      favorites,
+      getGenre,
+      addToFavorites,
+      removeFromFavorites,
+    } = this.props;
+
+    const {
       original_title: title,
       overview,
       genres,
       poster_path: posterUrl,
-    } = this.props.movie;
-    const { results } = this.props.similar;
-    if (!this.props.fetching) {
+    } = movie;
+
+    if (!fetching) {
       return (
         <div>
           <Movie>
@@ -69,15 +80,12 @@ class MovieDetails extends React.Component {
               <MovieTitleWrapper>
                 <MovieTitle>{title}</MovieTitle>
                 <Star
-                  logged={this.props.logged}
-                  movie={this.props.movie}
-                  favorite={isFavorite(
-                    this.props.movie.id,
-                    this.props.favorites,
-                  )}
-                  favorites={this.props.favorites}
-                  addToFavorites={this.props.addToFavorites}
-                  removeFromFavorites={this.props.removeFromFavorites}
+                  logged={logged}
+                  movie={movie}
+                  favorite={isFavorite(movie.id, favorites)}
+                  favorites={favorites}
+                  addToFavorites={addToFavorites}
+                  removeFromFavorites={removeFromFavorites}
                   context="MovieDetails"
                 />
               </MovieTitleWrapper>
@@ -88,7 +96,7 @@ class MovieDetails extends React.Component {
                       key={id}
                       id={id}
                       name={name}
-                      getGenre={this.props.getGenre}
+                      getGenre={getGenre}
                       context="MovieDetails"
                     />
                   ))}
@@ -100,22 +108,17 @@ class MovieDetails extends React.Component {
           <SimilarMovies>
             <SectionTitle>Similar Movies</SectionTitle>
             <Grid>
-              {results.length ? (
-                results.map(movie => (
+              {similar.results.length ? (
+                similar.results.map(similarMovie => (
                   <MoviePreview
-                    key={movie.id}
-                    logged={this.props.logged}
-                    movie={movie}
-                    getGenre={this.props.getGenre}
-                    addToFavorites={this.props.addToFavorites}
-                    removeFromFavorites={
-                      this.props.removeFromFavorites
-                    }
-                    favorite={isFavorite(
-                      movie.id,
-                      this.props.favorites,
-                    )}
-                    favorites={this.props.favorites}
+                    key={similarMovie.id}
+                    logged={logged}
+                    movie={similarMovie}
+                    getGenre={getGenre}
+                    addToFavorites={addToFavorites}
+                    removeFromFavorites={removeFromFavorites}
+                    favorite={isFavorite(similarMovie.id, favorites)}
+                    favorites={favorites}
                   />
                 ))
               ) : (

@@ -11,14 +11,13 @@ import Wrapper from './styled/Wrapper';
 import Field from './styled/Field';
 import Button from './styled/Button';
 
-function Search(props) {
-  const {
-    query,
-    updateQuery,
-    getSearched,
-    getPopular,
-    history,
-  } = props;
+function Search({
+  query,
+  updateQuery,
+  getSearched,
+  getPopular,
+  history,
+}) {
   return (
     <Wrapper>
       <Field

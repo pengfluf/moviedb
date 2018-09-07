@@ -9,9 +9,9 @@ import PropTypes from 'prop-types';
 
 import Wrapper from './styled/Wrapper';
 
-function GoBack(props) {
+function GoBack({ goBack }) {
   return (
-    <Wrapper onClick={props.goBack}>
+    <Wrapper onClick={goBack}>
       <svg>
         <use xlinkHref="#icon-back" />
       </svg>

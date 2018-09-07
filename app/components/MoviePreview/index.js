@@ -20,7 +20,15 @@ import Overview from './styled/Overview';
 import GenreWrapper from './styled/GenreWrapper';
 import Info from './styled/Info';
 
-function MoviePreview(props) {
+function MoviePreview({
+  movie,
+  logged,
+  favorite,
+  favorites,
+  addToFavorites,
+  removeFromFavorites,
+  getGenre,
+}) {
   const {
     original_title: title,
     overview,
@@ -28,15 +36,7 @@ function MoviePreview(props) {
     genre_ids: genreIds,
     genres,
     backdrop_path: imageUrl,
-  } = props.movie;
-
-  const {
-    favorite,
-    favorites,
-    addToFavorites,
-    removeFromFavorites,
-    getGenre,
-  } = props;
+  } = movie;
 
   // Why genreIds and genres both? Because of
   // the server response. It has different fields
@@ -51,8 +51,8 @@ function MoviePreview(props) {
         <TitleWrapper>
           <Title to={`/movie/${id}`}>{title}</Title>
           <Star
-            logged={props.logged}
-            movie={props.movie}
+            logged={logged}
+            movie={movie}
             favorite={favorite}
             favorites={favorites}
             addToFavorites={addToFavorites}
