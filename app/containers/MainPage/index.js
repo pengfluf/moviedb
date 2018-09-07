@@ -80,7 +80,7 @@ export class MainPage extends React.Component {
     const { selectedGenre, query } = this.props.mainpage;
     const { page, totalPages } = this.props.mainpage.movies;
     if (scrollPercentageLeft() < 20 && page < totalPages) {
-      if (selectedGenre.current) {
+      if (selectedGenre.current && !pathname.includes('movie')) {
         this.props.getGenre(
           getGenreId(selectedGenre.current),
           selectedGenre.current,
