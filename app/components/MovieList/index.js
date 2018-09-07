@@ -29,7 +29,12 @@ function MovieList({
   }
   return (
     <Fragment>
-      {fetching && !movies.length && <Loading mode="additional" />}
+      {/* eslint-disable prettier/prettier */}
+      {fetching &&
+        selectedGenre.prev !== selectedGenre.current && (
+        <Loading mode="additionalAbsolute" />
+      )}
+      {/* eslint-enable */}
       <Grid>
         {movies.map(movie => (
           <MoviePreview
