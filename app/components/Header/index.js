@@ -25,6 +25,7 @@ function Header(props) {
     getSearched,
     getPopular,
     getGenre,
+    memorizePrevSelectedGenre,
     history,
   } = props;
   return (
@@ -45,6 +46,7 @@ function Header(props) {
         logged={logged}
         pathname={history.location.pathname}
         getGenre={getGenre}
+        memorizePrevSelectedGenre={memorizePrevSelectedGenre}
       />
 
       <Search
@@ -71,13 +73,17 @@ Header.propTypes = {
   }),
   logged: PropTypes.bool,
   query: PropTypes.string,
-  selectedGenre: PropTypes.string,
+  selectedGenre: PropTypes.shape({
+    prev: PropTypes.string,
+    current: PropTypes.string,
+  }),
   login: PropTypes.func,
   logout: PropTypes.func,
   updateQuery: PropTypes.func,
   getSearched: PropTypes.func,
   getPopular: PropTypes.func,
   getGenre: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
 };
 
 export default Header;

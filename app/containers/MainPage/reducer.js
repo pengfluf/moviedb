@@ -21,6 +21,7 @@ import {
   REMOVE_FROM_FAVORITES,
   MEMORIZE_PREV_SELECTED_ID,
   MEMORIZE_CURRENT_SELECTED_ID,
+  MEMORIZE_PREV_SELECTED_GENRE,
   GET_POPULAR,
   GET_SEARCHED,
   GET_GENRE,
@@ -43,7 +44,10 @@ export const initialState = fromJS({
       results: [],
     },
   },
-  selectedGenre: '',
+  selectedGenre: {
+    prev: '',
+    current: '',
+  },
   query: '',
   favorites: [],
   fetching: false,
@@ -116,12 +120,17 @@ function mainPageReducer(state = initialState, action) {
         ['selectedMovie', 'ids', 'current'],
         action.id,
       );
+    case MEMORIZE_PREV_SELECTED_GENRE:
+      return state.setIn(['selectedGenre', 'prev'], action.genreName);
     case GET_POPULAR:
-      return state.set('selectedGenre', '');
+      return state.setIn(['selectedGenre', 'current'], '');
     case GET_SEARCHED:
-      return state.set('selectedGenre', '');
+      return state.setIn(['selectedGenre', 'current'], '');
     case GET_GENRE:
-      return state.set('selectedGenre', action.genreName);
+      return state.setIn(
+        ['selectedGenre', 'current'],
+        action.genreName,
+      );
     default:
       return state;
   }

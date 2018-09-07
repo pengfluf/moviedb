@@ -25,6 +25,7 @@ import {
   REMOVE_FROM_FAVORITES,
   MEMORIZE_PREV_SELECTED_ID,
   MEMORIZE_CURRENT_SELECTED_ID,
+  MEMORIZE_PREV_SELECTED_GENRE,
 } from './constants';
 
 export function login() {
@@ -163,5 +164,12 @@ export function memorizeCurrentSelectedId(id) {
   return {
     type: MEMORIZE_CURRENT_SELECTED_ID,
     id,
+  };
+}
+
+export function memorizePrevSelectedGenre(genreName) {
+  return {
+    type: MEMORIZE_PREV_SELECTED_GENRE,
+    genreName,
   };
 }

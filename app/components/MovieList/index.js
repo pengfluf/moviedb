@@ -17,12 +17,14 @@ function MovieList({
   fetching,
   movies,
   logged,
+  selectedGenre,
   getGenre,
+  memorizePrevSelectedGenre,
   addToFavorites,
   removeFromFavorites,
   favorites,
 }) {
-  if (fetching && !movies.length) {
+  if (fetching && selectedGenre.prev !== selectedGenre.current) {
     return <Loading mode="standalone" />;
   } else if (!fetching && !movies.length) {
     return <div>Nothing was found</div>;
@@ -36,6 +38,8 @@ function MovieList({
             logged={logged}
             movie={movie}
             getGenre={getGenre}
+            selectedGenre={selectedGenre}
+            memorizePrevSelectedGenre={memorizePrevSelectedGenre}
             addToFavorites={addToFavorites}
             removeFromFavorites={removeFromFavorites}
             favorite={isFavorite(movie.id, favorites)}
@@ -51,8 +55,13 @@ function MovieList({
 MovieList.propTypes = {
   fetching: PropTypes.bool,
   logged: PropTypes.bool,
-  movies: PropTypes.array,
+  selectedGenre: PropTypes.shape({
+    prev: PropTypes.string,
+    current: PropTypes.string,
+  }),
   getGenre: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
+  movies: PropTypes.array,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
   favorites: PropTypes.array,

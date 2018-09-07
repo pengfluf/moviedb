@@ -15,7 +15,14 @@ import Wrapper from './styled/Wrapper';
 import GenreList from './styled/GenreList';
 import Title from './styled/Title';
 
-function Navigation({ selectedGenre, logged, pathname, getGenre }) {
+function Navigation({
+  logged,
+  pathname,
+  selectedGenre,
+  getGenre,
+  memorizePrevSelectedGenre,
+}) {
+  const currentGenre = selectedGenre.current;
   return (
     <Wrapper>
       {logged && <Title to="/favorites">Favorites</Title>}
@@ -23,27 +30,29 @@ function Navigation({ selectedGenre, logged, pathname, getGenre }) {
       {/* eslint-disable prettier/prettier */}
       <Title
         to={
-          selectedGenre
-            ? `/genre/${selectedGenre.replace(
+          currentGenre
+            ? `/genre/${currentGenre.replace(
               / /g,
               '',
             )}`.toLowerCase()
             : pathname
         }
       >
-        {selectedGenre || 'Genres'}
+        {currentGenre || 'Genres'}
       </Title>
       {/* eslint-enable */}
 
       <GenreList>
         {genres.map(
           ({ id, name }) =>
-            name !== selectedGenre && (
+            name !== currentGenre && (
               <GenreLink
                 key={id}
                 id={id}
                 name={name}
                 getGenre={getGenre}
+                selectedGenre={selectedGenre}
+                memorizePrevSelectedGenre={memorizePrevSelectedGenre}
                 context="Navigation"
               />
             ),
@@ -54,10 +63,14 @@ function Navigation({ selectedGenre, logged, pathname, getGenre }) {
 }
 
 Navigation.propTypes = {
-  selectedGenre: PropTypes.string,
+  selectedGenre: PropTypes.shape({
+    prev: PropTypes.string,
+    current: PropTypes.string,
+  }),
   logged: PropTypes.bool,
   pathname: PropTypes.string,
   getGenre: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
 };
 
 export default Navigation;

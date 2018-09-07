@@ -41,7 +41,10 @@ describe('mainPageReducer', () => {
           results: [],
         },
       },
-      selectedGenre: '',
+      selectedGenre: {
+        prev: '',
+        current: '',
+      },
       query: '',
       favorites: [],
       fetching: false,
@@ -83,12 +86,12 @@ describe('mainPageReducer', () => {
   });
 
   it('Handles the getPopular action correctly', () => {
-    const expected = state.set('selectedGenre', '');
+    const expected = state.setIn(['selectedGenre', 'current'], '');
     expect(mainPageReducer(state, getPopular())).toEqual(expected);
   });
 
   it('Handles the getSearched action correctly', () => {
-    const expected = state.set('selectedGenre', '');
+    const expected = state.setIn(['selectedGenre', 'current'], '');
     expect(mainPageReducer(state, getSearched())).toEqual(expected);
   });
 
@@ -96,7 +99,10 @@ describe('mainPageReducer', () => {
     const genreId = 11;
     const genreName = 'Action';
     const page = 1;
-    const expected = state.set('selectedGenre', genreName);
+    const expected = state.setIn(
+      ['selectedGenre', 'current'],
+      genreName,
+    );
     expect(
       mainPageReducer(state, getGenre(genreId, genreName, page)),
     ).toEqual(expected);

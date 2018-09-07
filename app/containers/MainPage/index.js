@@ -41,6 +41,7 @@ import {
   removeFromFavorites,
   memorizePrevSelectedId,
   memorizeCurrentSelectedId,
+  memorizePrevSelectedGenre,
 } from './actions';
 
 import Wrapper from './styled/Wrapper';
@@ -79,10 +80,10 @@ export class MainPage extends React.Component {
     const { selectedGenre, query } = this.props.mainpage;
     const { page, totalPages } = this.props.mainpage.movies;
     if (scrollPercentageLeft() < 20 && page < totalPages) {
-      if (selectedGenre) {
+      if (selectedGenre.current) {
         this.props.getGenre(
-          getGenreId(selectedGenre),
-          selectedGenre,
+          getGenreId(selectedGenre.current),
+          selectedGenre.current,
           page + 1,
         );
       } else if (query) {
@@ -151,6 +152,9 @@ export class MainPage extends React.Component {
           getSearched={this.props.getSearched}
           getPopular={this.props.getPopular}
           getGenre={this.props.getGenre}
+          memorizePrevSelectedGenre={
+            this.props.memorizePrevSelectedGenre
+          }
           history={this.props.history}
         />
         <Switch>
@@ -159,9 +163,13 @@ export class MainPage extends React.Component {
             render={props => (
               <Favorites
                 logged={logged}
-                getGenre={this.props.getGenre}
-                removeFromFavorites={this.removeFromFavorites}
                 favorites={favorites}
+                selectedGenre={selectedGenre}
+                getGenre={this.props.getGenre}
+                memorizePrevSelectedGenre={
+                  this.props.memorizePrevSelectedGenre
+                }
+                removeFromFavorites={this.removeFromFavorites}
                 {...props}
               />
             )}
@@ -172,6 +180,15 @@ export class MainPage extends React.Component {
               <MovieDetails
                 fetching={fetching}
                 logged={logged}
+                favorite={isFavorite(
+                  selectedMovie.movie.id,
+                  favorites,
+                )}
+                favorites={favorites}
+                selectedGenre={selectedGenre}
+                ids={selectedMovie.ids}
+                movie={selectedMovie.movie}
+                similar={selectedMovie.similar}
                 getMovie={this.props.getMovie}
                 getSimilar={this.props.getSimilar}
                 getGenre={this.props.getGenre}
@@ -183,14 +200,9 @@ export class MainPage extends React.Component {
                 memorizeCurrentSelectedId={
                   this.props.memorizeCurrentSelectedId
                 }
-                favorite={isFavorite(
-                  selectedMovie.movie.id,
-                  favorites,
-                )}
-                favorites={favorites}
-                ids={selectedMovie.ids}
-                movie={selectedMovie.movie}
-                similar={selectedMovie.similar}
+                memorizePrevSelectedGenre={
+                  this.props.memorizePrevSelectedGenre
+                }
                 {...props}
               />
             )}
@@ -201,12 +213,15 @@ export class MainPage extends React.Component {
               <MovieList
                 fetching={fetching}
                 logged={logged}
-                getGenre={this.props.getGenre}
-                addToFavorites={this.addToFavorites}
-                removeFromFavorites={this.removeFromFavorites}
                 favorites={favorites}
                 movies={results}
                 selectedGenre={selectedGenre}
+                getGenre={this.props.getGenre}
+                addToFavorites={this.addToFavorites}
+                removeFromFavorites={this.removeFromFavorites}
+                memorizePrevSelectedGenre={
+                  this.props.memorizePrevSelectedGenre
+                }
                 {...props}
               />
             )}
@@ -231,7 +246,10 @@ MainPage.propTypes = {
         results: PropTypes.array,
       }),
     }),
-    selectedGenre: PropTypes.string,
+    selectedGenre: PropTypes.shape({
+      prev: PropTypes.string,
+      current: PropTypes.string,
+    }),
     query: PropTypes.string,
     favorites: PropTypes.array,
     fetching: PropTypes.bool,
@@ -250,6 +268,7 @@ MainPage.propTypes = {
   removeFromFavorites: PropTypes.func,
   memorizePrevSelectedId: PropTypes.func,
   memorizeCurrentSelectedId: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
   match: PropTypes.shape({
     path: PropTypes.string,
   }),
@@ -284,6 +303,8 @@ function mapDispatchToProps(dispatch) {
       dispatch(memorizePrevSelectedId(id)),
     memorizeCurrentSelectedId: id =>
       dispatch(memorizeCurrentSelectedId(id)),
+    memorizePrevSelectedGenre: genreName =>
+      dispatch(memorizePrevSelectedGenre(genreName)),
   };
 }
 

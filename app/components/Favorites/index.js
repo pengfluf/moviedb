@@ -16,6 +16,8 @@ function Favorites({
   logged,
   favorites,
   getGenre,
+  selectedGenre,
+  memorizePrevSelectedGenre,
   removeFromFavorites,
 }) {
   if (logged) {
@@ -29,7 +31,9 @@ function Favorites({
                 key={favorite.id}
                 logged={logged}
                 movie={favorite}
+                selectedGenre={selectedGenre}
                 getGenre={getGenre}
+                memorizePrevSelectedGenre={memorizePrevSelectedGenre}
                 removeFromFavorites={removeFromFavorites}
                 favorite={isFavorite(favorite.id, favorites)}
                 favorites={favorites}
@@ -48,6 +52,11 @@ function Favorites({
 Favorites.propTypes = {
   logged: PropTypes.bool,
   favorites: PropTypes.array,
+  selectedGenre: PropTypes.shape({
+    current: PropTypes.string,
+    prev: PropTypes.string,
+  }),
+  memorizePrevSelectedGenre: PropTypes.func,
   getGenre: PropTypes.func,
   removeFromFavorites: PropTypes.func,
 };

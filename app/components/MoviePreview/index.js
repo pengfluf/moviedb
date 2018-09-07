@@ -25,9 +25,11 @@ function MoviePreview({
   logged,
   favorite,
   favorites,
+  selectedGenre,
+  getGenre,
+  memorizePrevSelectedGenre,
   addToFavorites,
   removeFromFavorites,
-  getGenre,
 }) {
   const {
     original_title: title,
@@ -70,6 +72,8 @@ function MoviePreview({
             id={getGenreId(name)}
             name={name}
             getGenre={getGenre}
+            selectedGenre={selectedGenre}
+            memorizePrevSelectedGenre={memorizePrevSelectedGenre}
             context="MoviePreview"
           >
             {name}
@@ -86,11 +90,16 @@ MoviePreview.propTypes = {
     original_title: PropTypes.string,
     overview: PropTypes.string,
   }),
+  selectedGenre: PropTypes.shape({
+    current: PropTypes.string,
+    prev: PropTypes.string,
+  }),
+  getGenre: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
   favorite: PropTypes.bool,
   favorites: PropTypes.array,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
-  getGenre: PropTypes.func,
 };
 
 export default MoviePreview;

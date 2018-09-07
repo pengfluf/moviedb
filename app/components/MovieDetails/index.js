@@ -56,7 +56,9 @@ class MovieDetails extends React.Component {
       logged,
       fetching,
       favorites,
+      selectedGenre,
       getGenre,
+      memorizePrevSelectedGenre,
       addToFavorites,
       removeFromFavorites,
     } = this.props;
@@ -96,7 +98,11 @@ class MovieDetails extends React.Component {
                       key={id}
                       id={id}
                       name={name}
+                      selectedGenre={selectedGenre}
                       getGenre={getGenre}
+                      memorizePrevSelectedGenre={
+                        memorizePrevSelectedGenre
+                      }
                       context="MovieDetails"
                     />
                   ))}
@@ -115,6 +121,9 @@ class MovieDetails extends React.Component {
                     logged={logged}
                     movie={similarMovie}
                     getGenre={getGenre}
+                    memorizePrevSelectedGenre={
+                      memorizePrevSelectedGenre
+                    }
                     addToFavorites={addToFavorites}
                     removeFromFavorites={removeFromFavorites}
                     favorite={isFavorite(similarMovie.id, favorites)}
@@ -137,11 +146,16 @@ MovieDetails.propTypes = {
   getMovie: PropTypes.func,
   getSimilar: PropTypes.func,
   getGenre: PropTypes.func,
+  memorizePrevSelectedGenre: PropTypes.func,
   addToFavorites: PropTypes.func,
   removeFromFavorites: PropTypes.func,
   memorizePrevSelectedId: PropTypes.func,
   memorizeCurrentSelectedId: PropTypes.func,
   fetching: PropTypes.bool,
+  selectedGenre: PropTypes.shape({
+    current: PropTypes.string,
+    prev: PropTypes.string,
+  }),
   logged: PropTypes.bool,
   ids: PropTypes.shape({
     prev: PropTypes.string,
